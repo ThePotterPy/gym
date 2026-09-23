@@ -5,18 +5,38 @@ const prisma = new PrismaClient();
 async function main() {
   console.log('🌱 Iniciando carga de datos iniciales para Emporio Gym...');
 
-  // 1. Limpiar datos existentes de forma segura
-  await prisma.workoutSet.deleteMany();
-  await prisma.workoutSessionExercise.deleteMany();
-  await prisma.workoutSession.deleteMany();
-  await prisma.userAssignedRoutine.deleteMany();
-  await prisma.routineExercise.deleteMany();
-  await prisma.routine.deleteMany();
-  await prisma.exerciseMuscle.deleteMany();
-  await prisma.exercise.deleteMany();
-  await prisma.weeklySchedule.deleteMany();
-  await prisma.muscleGroup.deleteMany();
-  await prisma.user.deleteMany();
+  const shouldReset = process.argv.includes('--reset');
+  const [exerciseCount, scheduleCount, userCount] = await Promise.all([
+    prisma.exercise.count(),
+    prisma.weeklySchedule.count(),
+    prisma.user.count(),
+  ]);
+
+  if (!shouldReset && exerciseCount > 0 && scheduleCount > 0 && userCount > 0) {
+    console.log('✓ La base de datos ya está inicializada; no se modificaron datos.');
+    return;
+  }
+
+  if (!shouldReset && (exerciseCount > 0 || scheduleCount > 0 || userCount > 0)) {
+    throw new Error(
+      'La base de datos está parcialmente inicializada. Ejecutá el seed manualmente con --reset después de hacer un respaldo.',
+    );
+  }
+
+  // 1. Limpiar datos existentes únicamente cuando se solicita un reinicio explícito.
+  if (shouldReset) {
+    await prisma.workoutSet.deleteMany();
+    await prisma.workoutSessionExercise.deleteMany();
+    await prisma.workoutSession.deleteMany();
+    await prisma.userAssignedRoutine.deleteMany();
+    await prisma.routineExercise.deleteMany();
+    await prisma.routine.deleteMany();
+    await prisma.exerciseMuscle.deleteMany();
+    await prisma.exercise.deleteMany();
+    await prisma.weeklySchedule.deleteMany();
+    await prisma.muscleGroup.deleteMany();
+    await prisma.user.deleteMany();
+  }
 
   // 2. Crear Grupos Musculares
   const muscleGroupsData = [

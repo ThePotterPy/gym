@@ -9,7 +9,9 @@
     "typecheck": "tsc --noEmit",
     "check": "npm run typecheck && npm run build",
     "db:push": "prisma db push",
-    "db:seed": "tsx prisma/seed.ts"
+    "db:seed": "tsx prisma/seed.ts --reset",
+    "db:seed:safe": "tsx prisma/seed.ts",
+    "railway:start": "prisma db push --skip-generate && npm run db:seed:safe && next start --hostname 0.0.0.0 --port $PORT"
   },
   "dependencies": {
     "@prisma/client": "^6.19.3",
@@ -18,14 +20,14 @@
     "next": "16.3.6",
     "prisma": "^6.19.3",
     "react": "19.2.8",
-    "react-dom": "19.2.8"
+    "react-dom": "19.2.8",
+    "tsx": "^4.23.15"
   },
   "devDependencies": {
     "@types/canvas-confetti": "^1.9.0",
     "@types/node": "^20",
     "@types/react": "^19",
     "@types/react-dom": "^19",
-    "tsx": "^4.23.15",
     "typescript": "^5"
   }
 }
