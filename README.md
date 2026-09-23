@@ -1,36 +1,37 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# Emporio Gym & Fitness
 
-## Getting Started
+Plataforma de entrenamiento para socios de Emporio Gym. Permite consultar la programación diaria, crear rutinas, registrar series y cargas, revisar el historial y asignar rutinas desde el panel del entrenador.
 
-First, run the development server:
+## Requisitos
+
+- Node.js 20 o superior
+- npm
+
+## Configuración local
+
+1. Copiá `.env.example` como `.env`.
+2. Configurá una contraseña administrativa larga y un `SESSION_SECRET` aleatorio de al menos 32 caracteres.
+3. Instalá dependencias con `npm install`.
+4. Sincronizá la base con `npm run db:push`.
+5. Para cargar datos de demostración, ejecutá `npm run db:seed`.
+6. Iniciá el proyecto con `npm run dev`.
+
+La aplicación queda disponible en `http://localhost:3000` y el panel del entrenador en `/gestion-admin`.
+
+## Verificación
 
 ```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
+npm run typecheck
+npm run build
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+`npm run check` ejecuta ambas verificaciones.
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+## Seguridad
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+- Las cookies de socio y administrador están firmadas, son `httpOnly` y `sameSite=strict`.
+- Las operaciones de entrenamiento verifican que la sesión pertenezca al socio autenticado.
+- La edición global de ejercicios y la asignación de rutinas requieren sesión administrativa.
+- No uses las credenciales de ejemplo ni SQLite como almacenamiento compartido en un despliegue distribuido.
 
-## Learn More
-
-To learn more about Next.js, take a look at the following resources:
-
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
-
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
-
-## Deploy on Vercel
-
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
-
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+El acceso rápido de socios sigue siendo por nombre para conservar el flujo de recepción del gimnasio. Si la aplicación se expone públicamente o almacena información sensible, el siguiente paso recomendado es agregar un PIN individual o autenticación mediante número de socio/QR.

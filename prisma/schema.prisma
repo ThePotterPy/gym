@@ -1,0 +1,167 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "sqlite"
+  url      = env("DATABASE_URL")
+}
+
+model User {
+  id        String   @id @default(cuid())
+  name      String
+  gender    String   @default("MALE") // MALE | FEMALE
+  role      String   @default("MEMBER") // MEMBER | ADMIN
+  createdAt DateTime @default(now())
+
+  // Relaciones
+  assignedRoutines UserAssignedRoutine[]
+  workoutSessions  WorkoutSession[]
+  createdRoutines  Routine[]
+}
+
+model MuscleGroup {
+  id          String   @id @default(cuid())
+  name        String   @unique
+  slug        String   @unique
+  icon        String?
+  description String?
+  order       Int      @default(0)
+
+  exercises   ExerciseMuscle[]
+}
+
+model Exercise {
+  id           String   @id @default(cuid())
+  name         String
+  slug         String   @unique
+  description  String?
+  instructions String?
+  equipment    String   @default("Mancuernas") // Maquina, Mancuerna, Barra, Polea, Peso Corporal
+  difficulty   String   @default("Intermedio") // Principiante, Intermedio, Avanzado
+  defaultSets  Int      @default(4)
+  defaultReps  Int      @default(10)
+  defaultRest  Int      @default(60) // segundos
+  imageUrl     String?
+
+  muscles          ExerciseMuscle[]
+  routineExercises RoutineExercise[]
+  sessionExercises WorkoutSessionExercise[]
+}
+
+model ExerciseMuscle {
+  id            String      @id @default(cuid())
+  exerciseId    String
+  muscleGroupId String
+  isPrimary     Boolean     @default(true)
+
+  exercise      Exercise    @relation(fields: [exerciseId], references: [id], onDelete: Cascade)
+  muscleGroup   MuscleGroup @relation(fields: [muscleGroupId], references: [id], onDelete: Cascade)
+
+  @@unique([exerciseId, muscleGroupId])
+  @@index([muscleGroupId, isPrimary])
+}
+
+model WeeklySchedule {
+  id               String   @id @default(cuid())
+  dayOfWeek        Int      // 0 = Domingo, 1 = Lunes, ..., 6 = Sabado
+  gender           String   // MALE | FEMALE
+  title            String   // ej. "Pecho + Tríceps" o "Glúteos + Isquios"
+  description      String?
+  muscleGroupSlugs String   // ej. "pecho,triceps"
+
+  @@unique([dayOfWeek, gender])
+}
+
+model Routine {
+  id           String   @id @default(cuid())
+  name         String
+  description  String?
+  isTemplate   Boolean  @default(false)
+  targetGender String?  // MALE | FEMALE | ALL
+  createdById  String?
+  createdAt    DateTime @default(now())
+
+  createdBy    User?    @relation(fields: [createdById], references: [id], onDelete: SetNull)
+  exercises    RoutineExercise[]
+  assignments  UserAssignedRoutine[]
+
+  @@index([isTemplate, targetGender])
+  @@index([createdById])
+}
+
+model RoutineExercise {
+  id          String   @id @default(cuid())
+  routineId   String
+  exerciseId  String
+  order       Int      @default(0)
+  sets        Int      @default(4)
+  reps        Int      @default(10)
+  weightKg    Float?   @default(0)
+  restSeconds Int      @default(60)
+  notes       String?
+
+  routine     Routine  @relation(fields: [routineId], references: [id], onDelete: Cascade)
+  exercise    Exercise @relation(fields: [exerciseId], references: [id], onDelete: Cascade)
+
+  @@index([routineId, order])
+}
+
+model UserAssignedRoutine {
+  id           String   @id @default(cuid())
+  userId       String
+  routineId    String
+  isCustomized Boolean  @default(false)
+  assignedAt   DateTime @default(now())
+
+  user         User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  routine      Routine  @relation(fields: [routineId], references: [id], onDelete: Cascade)
+
+  @@unique([userId, routineId])
+  @@index([routineId])
+}
+
+model WorkoutSession {
+  id              String    @id @default(cuid())
+  userId          String
+  routineId       String?
+  name            String
+  startedAt       DateTime  @default(now())
+  finishedAt      DateTime?
+  durationMinutes Int?
+  notes           String?
+
+  user            User      @relation(fields: [userId], references: [id], onDelete: Cascade)
+  exercises       WorkoutSessionExercise[]
+
+  @@index([userId, startedAt])
+}
+
+model WorkoutSessionExercise {
+  id         String   @id @default(cuid())
+  sessionId  String
+  exerciseId String
+  order      Int      @default(0)
+  restSeconds Int     @default(60)
+
+  session    WorkoutSession @relation(fields: [sessionId], references: [id], onDelete: Cascade)
+  exercise   Exercise       @relation(fields: [exerciseId], references: [id], onDelete: Cascade)
+  sets       WorkoutSet[]
+
+  @@index([sessionId, order])
+}
+
+model WorkoutSet {
+  id                String   @id @default(cuid())
+  sessionExerciseId String
+  setNumber         Int
+  plannedReps       Int      @default(10)
+  plannedWeightKg   Float?   @default(0)
+  actualReps        Int?     @default(10)
+  actualWeightKg    Float?   @default(0)
+  completed         Boolean  @default(false)
+
+  sessionExercise   WorkoutSessionExercise @relation(fields: [sessionExerciseId], references: [id], onDelete: Cascade)
+
+  @@unique([sessionExerciseId, setNumber])
+}

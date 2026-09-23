@@ -1,40 +1,81 @@
+@import url('https://fonts.googleapis.com/css2?family=Barlow+Condensed:ital,wght@0,600;0,700;0,800;0,900;1,700&family=Barlow:wght@400;500;600;700&display=swap');
+
 :root {
-  --background: #ffffff;
-  --foreground: #171717;
-}
+  /* Paleta Clara & Atlética inspirada en el Logo de Emporio Gym */
+  --bg-main: #f8fafc;
+  --bg-surface: #ffffff;
+  --bg-subtle: #f1f5f9;
+  --bg-input: #f8fafc;
 
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
-  }
-}
+  --border-subtle: #e2e8f0;
+  --border-active: #cbd5e1;
+  --border-focus: #ef233c;
 
-html {
-  height: 100%;
-}
+  /* Rojos y Grises Oficiales */
+  --red-primary: #d90429;
+  --red-hover: #b8001f;
+  --red-light: #ef233c;
+  --red-tint: #fff1f2;
+  --red-border: #fecdd3;
 
-html,
-body {
-  max-width: 100vw;
-  overflow-x: hidden;
-}
+  --gray-dark: #0f172a;
+  --gray-charcoal: #1e293b;
+  --gray-muted: #64748b;
+  --gray-light: #94a3b8;
+  --gray-silver: #e2e8f0;
 
-body {
-  min-height: 100%;
-  display: flex;
-  flex-direction: column;
-  color: var(--foreground);
-  background: var(--background);
-  font-family: Arial, Helvetica, sans-serif;
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
+  --green-success: #16a34a;
+  --green-tint: #f0fdf4;
+  --green-border: #bbf7d0;
+
+  --amber-warning: #d97706;
+  --amber-tint: #fffbeb;
+
+  --font-heading: 'Barlow Condensed', -apple-system, sans-serif;
+  --font-body: 'Barlow', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+
+  --radius-sm: 6px;
+  --radius-md: 10px;
+  --radius-lg: 14px;
+  --radius-full: 9999px;
+
+  --shadow-sm: 0 1px 2px 0 rgba(0, 0, 0, 0.04);
+  --shadow-card: 0 2px 8px -1px rgba(15, 23, 42, 0.06), 0 1px 4px -1px rgba(15, 23, 42, 0.04);
+  --shadow-card-hover: 0 8px 16px -2px rgba(15, 23, 42, 0.08), 0 2px 6px -1px rgba(15, 23, 42, 0.04);
+  --shadow-nav: 0 -2px 10px rgba(15, 23, 42, 0.05);
 }
 
 * {
   box-sizing: border-box;
   padding: 0;
   margin: 0;
+  -webkit-tap-highlight-color: transparent;
+}
+
+html, body {
+  background-color: var(--bg-main);
+  color: var(--gray-dark);
+  font-family: var(--font-body);
+  min-height: 100dvh;
+  -webkit-font-smoothing: antialiased;
+}
+
+body {
+  overflow-x: clip;
+}
+
+img, svg {
+  max-width: 100%;
+}
+
+p, h1, h2, h3, h4, span {
+  overflow-wrap: anywhere;
+}
+
+h1, h2, h3, h4, .font-heading {
+  font-family: var(--font-heading);
+  letter-spacing: 0.5px;
+  text-transform: uppercase;
 }
 
 a {
@@ -42,8 +83,318 @@ a {
   text-decoration: none;
 }
 
-@media (prefers-color-scheme: dark) {
-  html {
-    color-scheme: dark;
+button {
+  font-family: var(--font-body);
+  cursor: pointer;
+  border: none;
+  background: none;
+  transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+button:disabled {
+  cursor: not-allowed;
+}
+
+:focus-visible {
+  outline: 3px solid rgba(217, 4, 41, 0.3);
+  outline-offset: 3px;
+}
+
+.sr-only {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  white-space: nowrap;
+  border: 0;
+}
+
+input, select, textarea {
+  font-family: var(--font-body);
+}
+
+/* Scrollbar estilizada */
+::-webkit-scrollbar {
+  width: 6px;
+  height: 6px;
+}
+::-webkit-scrollbar-track {
+  background: var(--bg-main);
+}
+::-webkit-scrollbar-thumb {
+  background: var(--gray-light);
+  border-radius: var(--radius-full);
+}
+::-webkit-scrollbar-thumb:hover {
+  background: var(--gray-muted);
+}
+
+/* Contenedores */
+.container-mobile {
+  width: 100%;
+  max-width: 520px;
+  margin: 0 auto;
+  padding: 16px;
+  min-height: 100dvh;
+  display: flex;
+  flex-direction: column;
+}
+
+.container-desktop {
+  width: 100%;
+  max-width: 1100px;
+  margin: 0 auto;
+  padding: 24px 20px;
+}
+
+/* Botones estilo atlético sobrio */
+.btn-primary {
+  background-color: var(--red-primary);
+  color: #ffffff;
+  font-family: var(--font-heading);
+  font-weight: 700;
+  font-size: 17px;
+  letter-spacing: 0.5px;
+  text-transform: uppercase;
+  padding: 12px 20px;
+  border-radius: var(--radius-md);
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  box-shadow: 0 2px 4px rgba(217, 4, 41, 0.2);
+  width: 100%;
+}
+
+.btn-primary:hover {
+  background-color: var(--red-hover);
+  transform: translateY(-1px);
+  box-shadow: 0 4px 10px rgba(217, 4, 41, 0.3);
+}
+
+.btn-primary:active {
+  transform: translateY(0);
+}
+
+.btn-secondary {
+  background-color: var(--bg-surface);
+  color: var(--gray-charcoal);
+  border: 1px solid var(--border-subtle);
+  font-weight: 600;
+  font-size: 14px;
+  padding: 11px 16px;
+  border-radius: var(--radius-md);
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  box-shadow: var(--shadow-sm);
+  width: 100%;
+}
+
+.btn-secondary:hover {
+  background-color: var(--bg-subtle);
+  border-color: var(--border-active);
+  color: var(--gray-dark);
+}
+
+.btn-outline-red {
+  background: var(--bg-surface);
+  color: var(--red-primary);
+  border: 1.5px solid var(--red-border);
+  font-weight: 700;
+  font-size: 14px;
+  padding: 10px 16px;
+  border-radius: var(--radius-md);
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+}
+
+.btn-outline-red:hover {
+  background: var(--red-tint);
+  border-color: var(--red-primary);
+}
+
+/* Tarjetas limpias de fondo blanco */
+.card-clean {
+  background: var(--bg-surface);
+  border: 1px solid var(--border-subtle);
+  border-radius: var(--radius-lg);
+  padding: 20px;
+  box-shadow: var(--shadow-card);
+  position: relative;
+}
+
+.card-clean-interactive {
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.card-clean-interactive:hover {
+  border-color: var(--border-active);
+  box-shadow: var(--shadow-card-hover);
+  transform: translateY(-1px);
+}
+
+/* Badges atléticos */
+.badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  font-size: 11px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  padding: 4px 9px;
+  border-radius: var(--radius-full);
+}
+
+.badge-red {
+  background: var(--red-tint);
+  color: var(--red-primary);
+  border: 1px solid var(--red-border);
+}
+
+.badge-green {
+  background: var(--green-tint);
+  color: var(--green-success);
+  border: 1px solid var(--green-border);
+}
+
+.badge-amber {
+  background: var(--amber-tint);
+  color: var(--amber-warning);
+  border: 1px solid #fde68a;
+}
+
+.badge-muted {
+  background: var(--bg-subtle);
+  color: var(--gray-muted);
+  border: 1px solid var(--border-subtle);
+}
+
+/* Inputs claros */
+.input-field {
+  width: 100%;
+  background: var(--bg-input);
+  border: 1.5px solid var(--border-subtle);
+  color: var(--gray-dark);
+  padding: 12px 14px;
+  border-radius: var(--radius-md);
+  font-size: 15px;
+  transition: border-color 0.2s ease, box-shadow 0.2s ease;
+  outline: none;
+}
+
+.input-field:focus {
+  border-color: var(--red-primary);
+  background: #ffffff;
+  box-shadow: 0 0 0 3px rgba(217, 4, 41, 0.1);
+}
+
+.input-field::placeholder {
+  color: var(--gray-light);
+}
+
+/* Bottom Navigation clara */
+.bottom-nav {
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  background: #ffffff;
+  border-top: 1px solid var(--border-subtle);
+  display: flex;
+  justify-content: space-around;
+  padding: 6px 12px calc(10px + env(safe-area-inset-bottom)) 12px;
+  z-index: 100;
+  box-shadow: var(--shadow-nav);
+}
+
+.landing-hero-content,
+.landing-login-card,
+.responsive-card-grid,
+.responsive-contact-grid {
+  min-width: 0;
+  width: 100%;
+}
+
+@media (max-width: 520px) {
+  .landing-hero {
+    padding: 34px 16px 42px !important;
   }
+
+  .landing-title {
+    font-size: clamp(30px, 10vw, 40px) !important;
+  }
+
+  .landing-login-card {
+    max-width: 100% !important;
+    padding: 16px;
+  }
+
+  .landing-login-card .btn-primary {
+    font-size: 15px !important;
+    padding-inline: 12px;
+  }
+
+  .responsive-card-grid,
+  .responsive-contact-grid {
+    grid-template-columns: minmax(0, 1fr) !important;
+  }
+
+  .navbar-brand-text span:first-child {
+    font-size: 18px !important;
+  }
+
+  .bottom-nav-item {
+    flex: 1;
+    min-width: 0;
+    padding-inline: 4px;
+  }
+}
+
+@media (max-width: 350px) {
+  .navbar-brand-text span:last-child {
+    display: none;
+  }
+
+  .btn-outline-red {
+    padding-inline: 10px !important;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after {
+    scroll-behavior: auto !important;
+    transition-duration: 0.01ms !important;
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+  }
+}
+
+.bottom-nav-item {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 3px;
+  font-size: 11px;
+  font-weight: 700;
+  color: var(--gray-muted);
+  transition: color 0.15s ease;
+  padding: 6px 12px;
+  border-radius: var(--radius-md);
+}
+
+.bottom-nav-item.active {
+  color: var(--red-primary);
+}
+
+.bottom-nav-item:hover {
+  color: var(--gray-dark);
 }

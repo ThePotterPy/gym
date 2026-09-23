@@ -1,7 +1,7 @@
 import type { NextConfig } from "next";
 
 const nextConfig: NextConfig = {
-  /* config options here */
+  devIndicators: false, // Desactiva el botón flotante con la 'N' de Next.js en desarrollo
 };
 
 export default nextConfig;
